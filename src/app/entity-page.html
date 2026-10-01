@@ -1,0 +1,140 @@
+@if (entity.hasValue()) {
+  @let e = entity.value();
+  <header class="entity">
+    <h1>{{ e.name }}</h1>
+    <p>{{ e.department }} · Orden {{ e.level.toLowerCase() }} · NIT {{ e.nit }} · {{ e.contracts | num }} contratos en SECOP II</p>
+  </header>
+
+  <nav class="years" aria-label="Año de firma">
+    @for (y of e.years; track y.year) {
+      <a
+        [routerLink]="[]"
+        [queryParams]="{ year: y.year }"
+        [class.selected]="y.year === selectedYear()"
+        [attr.aria-current]="y.year === selectedYear() ? 'true' : null"
+        [title]="(y.contracts | num) + ' contratos'"
+      >
+        <span class="bar" [style.height.%]="(100 * y.contracts) / busiestYear()"></span>
+        {{ y.year }}
+      </a>
+    } @empty {
+      <p class="state">Esta entidad no tiene contratos firmados en SECOP II.</p>
+    }
+  </nav>
+} @else if (entity.error()) {
+  <p class="state">No encontramos esa entidad, o la API no responde.</p>
+} @else {
+  <p class="state">Cargando la entidad…</p>
+}
+
+@if (overview.hasValue()) {
+  @let o = overview.value();
+
+  @if (dominantShare()) {
+    <aside class="warning" role="note">
+      <strong>Un solo contrato explica el {{ 100 * dominantShare() | num }} % del total de {{ o.year }}.</strong>
+      Los valores de SECOP se digitan a mano y algunos tienen errores de varios órdenes de magnitud.
+      Sin ese contrato, el total sería {{ o.total - o.largest | cop }}. Revísalo abajo antes de citar la cifra.
+    </aside>
+  }
+
+  <section class="kpis">
+    <div><span>Total contratado en {{ o.year }}</span><strong>{{ o.total | cop }}</strong></div>
+    <div><span>Contratos</span><strong>{{ o.contracts | num }}</strong></div>
+    <div><span>Contratistas distintos</span><strong>{{ o.suppliers | num }}</strong></div>
+    <div><span>Contrato más grande</span><strong>{{ o.largest | cop }}</strong></div>
+  </section>
+
+  <div class="columns">
+    <section class="card">
+      <h2>Mayores contratistas</h2>
+      <ol class="ranking">
+        @for (s of o.topSuppliers; track $index) {
+          <li>
+            <div class="label">
+              <span>{{ s.name }}</span>
+              <strong>{{ s.total | cop }}</strong>
+            </div>
+            <div class="track"><div [style.width.%]="(100 * s.total) / o.topSuppliers[0].total"></div></div>
+            <small>{{ s.contracts | num }} {{ s.contracts === 1 ? 'contrato' : 'contratos' }} · {{ (100 * s.total) / o.total | num: 1 }} % del total</small>
+          </li>
+        }
+      </ol>
+    </section>
+
+    <div class="stack">
+      <section class="card">
+        <h2>Por modalidad</h2>
+        <ol class="ranking">
+          @for (m of o.byModality; track m.modality) {
+            <li>
+              <div class="label">
+                <span>{{ m.modality }}</span>
+                <strong>{{ m.total | cop }}</strong>
+              </div>
+              <div class="track"><div [style.width.%]="(100 * m.total) / o.byModality[0].total"></div></div>
+              <small>{{ m.contracts | num }} {{ m.contracts === 1 ? 'contrato' : 'contratos' }}</small>
+            </li>
+          }
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>Valor firmado por mes</h2>
+        <div class="months">
+          @for (m of o.byMonth; track m.month) {
+            <div [title]="(m.total | cop) + ' en ' + (m.contracts | num) + ' contratos'">
+              <span class="bar" [style.height.%]="(100 * m.total) / busiestMonth()"></span>
+              {{ months[m.month - 1] }}
+            </div>
+          }
+        </div>
+      </section>
+    </div>
+  </div>
+} @else if (overview.error()) {
+  <p class="state">No se pudo cargar el resumen del año. datos.gov.co a veces tarda; vuelve a intentarlo.</p>
+} @else if (selectedYear()) {
+  <p class="state">Sumando los contratos de {{ selectedYear() }}…</p>
+}
+
+@if (selectedYear()) {
+  <section class="card contracts">
+    <h2>Contratos de {{ selectedYear() }}, del más grande al más pequeño</h2>
+    @if (contracts.hasValue()) {
+      @let c = contracts.value();
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>Firma</th><th>Objeto</th><th>Contratista</th><th>Modalidad</th><th class="money">Valor</th><th></th></tr>
+          </thead>
+          <tbody>
+            @for (contract of c.items; track contract.id) {
+              <tr>
+                <td class="nowrap">{{ contract.signedOn }}</td>
+                <td><p class="object" [title]="contract.object">{{ contract.object }}</p></td>
+                <td>{{ contract.supplier }}</td>
+                <td>{{ contract.modality }}<small>{{ contract.status }}</small></td>
+                <td class="money nowrap">{{ contract.value | cop }}</td>
+                <td class="nowrap">
+                  @if (contract.url) {
+                    <a [href]="contract.url" target="_blank" rel="noopener">Ver en SECOP ↗</a>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <button type="button" [disabled]="c.page === 1" (click)="page.set(c.page - 1)">← Anterior</button>
+        <span>Página {{ c.page }}</span>
+        <button type="button" [disabled]="!c.hasMore" (click)="page.set(c.page + 1)">Siguiente →</button>
+      </div>
+    } @else if (contracts.error()) {
+      <p class="state">No se pudieron cargar los contratos.</p>
+    } @else {
+      <p class="state">Cargando contratos…</p>
+    }
+  </section>
+}

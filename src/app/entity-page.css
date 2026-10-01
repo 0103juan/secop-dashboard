@@ -1,0 +1,253 @@
+:host {
+  display: grid;
+  /* minmax(0, ...) lets the wide table scroll inside its card instead of widening the page. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.3rem, 3.4vw, 1.9rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.entity p,
+.state {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.card {
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+/* Year selector: each year is a bar as tall as its number of contracts. */
+.years {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.years a,
+.months > div {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 26px; /* twelve years still fit across a phone */
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  height: 92px;
+  text-align: center;
+  font-size: clamp(0.66rem, 2.6vw, 0.78rem);
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.bar {
+  display: block;
+  min-height: 3px;
+  margin-bottom: 4px;
+  background: var(--line);
+  border-radius: 5px 5px 2px 2px;
+}
+
+.years a:hover .bar {
+  background: var(--muted);
+}
+
+.years a.selected {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.years a.selected .bar,
+.months .bar {
+  background: var(--accent);
+}
+
+.warning {
+  padding: 12px 16px;
+  font-size: 0.92rem;
+  color: var(--warn);
+  background: var(--warn-soft);
+  border-radius: 12px;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.kpis div {
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.kpis span {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.kpis strong {
+  font-size: 1.45rem;
+  letter-spacing: -0.015em;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+.ranking {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.label strong {
+  white-space: nowrap;
+}
+
+.track {
+  height: 6px;
+  margin: 5px 0 3px;
+  background: var(--page);
+  border-radius: 3px;
+}
+
+.track div {
+  height: 100%;
+  min-width: 3px;
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+small {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.months {
+  display: flex;
+  gap: 6px;
+}
+
+.months > div {
+  min-width: 0;
+  height: 120px;
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+th {
+  padding: 0 10px 8px;
+  text-align: left;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+}
+
+td {
+  padding: 10px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+.money {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+td.money {
+  font-weight: 600;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.object {
+  display: -webkit-box;
+  max-width: 44ch;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  text-transform: lowercase;
+}
+
+.object::first-letter {
+  text-transform: uppercase;
+}
+
+.pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+button {
+  padding: 7px 14px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

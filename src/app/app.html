@@ -1,0 +1,42 @@
+<header class="bar">
+  <a class="brand" routerLink="/" (click)="clear()">Contratos <span>a la vista</span></a>
+  <div class="search">
+    <input
+      type="search"
+      placeholder="Busca una entidad: Medellín, Ministerio de Educación…"
+      aria-label="Buscar una entidad pública"
+      autocomplete="off"
+      [value]="query()"
+      (input)="type($any($event.target).value)"
+    />
+    @if (query().trim().length >= 3) {
+      <ul class="results">
+        @if (results.hasValue()) {
+          @for (entity of results.value().items; track entity.nit) {
+            <li>
+              <a [routerLink]="['/entidad', entity.nit]" (click)="clear()">
+                <strong>{{ entity.name }}</strong>
+                <span>{{ entity.department }} · {{ entity.contracts | num }} contratos</span>
+              </a>
+            </li>
+          } @empty {
+            <li class="hint">Ninguna entidad coincide con esa búsqueda.</li>
+          }
+        } @else if (results.error()) {
+          <li class="hint">No se pudo consultar la API. ¿Está encendida?</li>
+        } @else {
+          <li class="hint">Buscando…</li>
+        }
+      </ul>
+    }
+  </div>
+</header>
+
+<main>
+  <router-outlet />
+</main>
+
+<footer>
+  Datos abiertos de <a href="https://www.datos.gov.co/d/jbjy-vk9h" target="_blank" rel="noopener">SECOP II en datos.gov.co</a>.
+  Solo incluye contratos publicados en SECOP II, así que los totales son un piso y no toda la contratación de la entidad.
+</footer>
