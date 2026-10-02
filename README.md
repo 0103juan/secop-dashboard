@@ -2,6 +2,8 @@
 
 **Contratos a la vista**: a web dashboard that shows how much a Colombian state entity contracts, with whom and how. Search an entity, pick a year, and see the total, the top suppliers, the contracting modalities, the months, and every contract with a link to its file in SECOP II.
 
+Live at <https://0103juan.github.io/secop-dashboard/>. The API behind it runs on a free plan and sleeps when idle, so the first search after a pause can take about a minute.
+
 Angular 22 on top of [secop-api](../secop-api). The interface is in Spanish; this README is in English.
 
 ## What it shows

@@ -1,8 +1,6 @@
 // The contract with secop-api.
 // On a developer's machine the dashboard talks to a local API; anywhere else, to the deployed one.
-// Set this to the address Render gives the service (it looks like https://secop-api-xxxx.onrender.com).
-// While it is empty, the published dashboard has no API to call and says so.
-const DEPLOYED_API = '';
+const DEPLOYED_API = 'https://secop-api-i89q.onrender.com';
 export const API_URL = location.hostname === 'localhost' ? 'http://localhost:3000' : DEPLOYED_API;
 
 export type Entity = { nit: number; name: string; department: string; level: string; contracts: number };
