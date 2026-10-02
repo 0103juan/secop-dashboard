@@ -28,6 +28,27 @@ test('search an entity, read its latest year and filter the contracts by modalit
   await expect(page.locator(rows)).toHaveCount(3);
 });
 
+test('the year is explained: what the figures say, how the money was awarded and when', async ({ page }) => {
+  await page.goto(`${ENTITY}?year=2024`);
+  await expect(page.locator('.lead')).toHaveText('En 2024 esta entidad firmó 3 contratos por $9 mil millones con 3 contratistas.');
+
+  // The fixture has no contracts in 2023, so there is nothing to compare 2024 with and that reading is left out.
+  const readings = page.locator('.reading');
+  await expect(readings.locator('.eyebrow')).toHaveText(['01 · Concentración', '02 · Cómo se adjudicó', '03 · Cuándo se firmó']);
+  await expect(readings.nth(0)).toHaveClass(/open/);
+  await expect(readings.nth(0)).toContainText('El primero, ACME SAS, tiene el 44,4 % en 1 contrato.');
+
+  // The API classified both modalities; 6 of the 9 thousand millions were awarded directly.
+  await readings.nth(1).hover();
+  await expect(readings.nth(1)).toHaveClass(/open/);
+  await expect(readings.nth(1).locator('.figure')).toHaveText('67 %');
+  await expect(readings.nth(1)).toContainText('El resto: 33 % en procesos con competencia.');
+  await expect(page.locator('app-award-methods dt')).toHaveText(['Contratación directa67 %', 'Con competencia33 %']);
+
+  await expect(page.locator('app-month-chart .peak')).toContainText('mar'); // the 4 thousand millions signed in March
+  await expect(page.locator('app-month-chart .peak')).toContainText('$4 mil millones');
+});
+
 test('a filtered view is a link that can be shared, and changing year drops the filter', async ({ page }) => {
   await page.goto(`${ENTITY}?year=2024&modality=${encodeURIComponent('Contratación directa')}`);
   await expect(page.locator('.filter')).toContainText('Solo Contratación directa');
@@ -44,6 +65,8 @@ test('a year explained by one mistyped contract carries a warning', async ({ pag
   const warning = page.getByRole('note');
   await expect(warning).toContainText('Un solo contrato explica el 100 % del total de 2019');
   await expect(warning).toContainText('el total sería $5 mil millones');
+  await expect(page.locator('.lead')).toContainText('El valor registrado no se puede leer como gasto.');
+  await expect(page.locator('.kpis div:first-child p')).toHaveText('Sin el contrato mayor: $5 mil millones');
   await expect(page.locator(rows).first()).toContainText('CONSORCIO MAL DIGITADO');
 });
 

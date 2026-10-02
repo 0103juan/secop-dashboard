@@ -32,6 +32,41 @@ a {
   color: var(--accent);
 }
 
+/* Small technical labels: what a figure or a block is. */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+/* A panel of the entity page: a question as its title, one line that says how to read it, then the answer. */
+.card {
+  padding: 22px 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.card > h2,
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-stretch: 75%;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.hint {
+  max-width: 62ch;
+  margin: 8px 0 20px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
 ::selection {
   color: var(--page);
   background: var(--accent);

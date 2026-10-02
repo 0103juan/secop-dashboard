@@ -1,11 +1,13 @@
-import { httpResource } from '@angular/common/http';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { API_URL, Entity } from './api';
-import { NumPipe } from './cop.pipe';
+import { NumPipe } from './core/format';
+import { SecopApi } from './core/secop-api';
+import { ProgressiveBlur } from './ui/progressive-blur';
+import { ScrollProgress } from './ui/scroll-progress';
 
+/** The frame around every page: the brand, the entity search and the note about what the data covers. */
 @Component({
-  imports: [RouterOutlet, RouterLink, NumPipe],
+  imports: [RouterOutlet, RouterLink, NumPipe, ProgressiveBlur, ScrollProgress],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
@@ -15,9 +17,7 @@ export class App {
   private readonly term = signal(''); // the query, once the user pauses typing
   private timer?: ReturnType<typeof setTimeout>;
 
-  protected readonly results = httpResource<{ items: Entity[] }>(() =>
-    this.term().length >= 3 ? { url: `${API_URL}/entities`, params: { q: this.term() } } : undefined,
-  );
+  protected readonly results = inject(SecopApi).search(this.term);
 
   protected type(value: string): void {
     this.query.set(value);

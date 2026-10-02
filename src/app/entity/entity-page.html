@@ -1,0 +1,102 @@
+@if (entity.hasValue()) {
+  @let e = entity.value();
+  <header class="entity">
+    <p class="eyebrow">{{ e.department }} · Orden {{ e.level.toLowerCase() }} · NIT {{ e.nit }}</p>
+    <h1>{{ e.name }}</h1>
+    <p class="eyebrow">{{ e.contracts | num }} contratos en SECOP II</p>
+  </header>
+
+  <app-year-picker [years]="e.years" [selected]="selectedYear()" />
+} @else if (entity.error()) {
+  <p class="state">No encontramos esa entidad, o la API no responde.</p>
+} @else {
+  <p class="state">Cargando la entidad…</p>
+}
+
+@if (overview.hasValue()) {
+  @let o = overview.value();
+
+  @if (dominantShare()) {
+    <aside class="warning" role="note">
+      <strong>Un solo contrato explica el {{ 100 * dominantShare() | num }} % del total de {{ o.year }}.</strong>
+      Los valores de SECOP se digitan a mano y algunos tienen errores de varios órdenes de magnitud.
+      Sin ese contrato, el total sería {{ o.total - o.largest | cop }}. Revísalo abajo antes de citar la cifra.
+    </aside>
+  }
+
+  <section class="block">
+    <p class="lead">
+      @if (dominantShare()) {
+        En {{ o.year }} esta entidad firmó <strong>{{ o.contracts | num }} contratos</strong> con
+        <strong>{{ o.suppliers | num }} contratistas</strong>. El valor registrado no se puede leer como gasto.
+      } @else {
+        En {{ o.year }} esta entidad firmó <strong>{{ o.contracts | num }} contratos</strong> por
+        <strong>{{ o.total | cop }}</strong> con <strong>{{ o.suppliers | num }} contratistas</strong>.
+      }
+    </p>
+    <app-kpi-strip [overview]="o" [previous]="previousYear()" />
+  </section>
+
+  @if (readings().length) {
+    <section class="block">
+      <h2 class="title">Lo que dicen las cifras de {{ o.year }}</h2>
+      <app-readings [readings]="readings()" />
+    </section>
+  }
+
+  <div class="pair">
+    <section class="card">
+      <h2>¿A quién se contrató?</h2>
+      <p class="hint">Los contratistas que más valor recibieron en {{ o.year }}. La barra compara a cada uno con el primero.</p>
+      <app-ranking [items]="suppliers()" />
+    </section>
+
+    <section class="card">
+      <h2>¿Cómo se adjudicó?</h2>
+      <p class="hint">El valor del año según la forma de elegir al contratista.</p>
+      <app-award-methods [shares]="awardShares()" [total]="o.total" />
+
+      <h3>Por modalidad</h3>
+      <p class="hint">Elige una modalidad para ver solo sus contratos.</p>
+      <app-ranking [items]="mainModalities()" [scale]="o.byModality[0]?.total" />
+      @if (otherModalities().length) {
+        <details [open]="otherSelected()">
+          <summary>Otras {{ otherModalities().length }} modalidades</summary>
+          <app-ranking [items]="otherModalities()" [scale]="o.byModality[0]?.total" />
+        </details>
+      }
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>¿Cuándo se firmó?</h2>
+    <p class="hint">Valor de los contratos firmados en cada mes de {{ o.year }}.</p>
+    <app-month-chart [months]="o.byMonth" />
+  </section>
+} @else if (overview.error()) {
+  <p class="state">No se pudo cargar el resumen del año. datos.gov.co a veces tarda; vuelve a intentarlo.</p>
+} @else if (selectedYear()) {
+  <p class="state">Sumando los contratos de {{ selectedYear() }}…</p>
+}
+
+@if (selectedYear()) {
+  <section class="card">
+    <h2>¿Qué se contrató?</h2>
+    <p class="hint">
+      Los contratos de {{ selectedYear() }}, del más grande al más pequeño. Cada uno enlaza a su expediente en SECOP II.
+    </p>
+    @if (modality()) {
+      <p class="filter">
+        Solo <strong>{{ modality() }}</strong>
+        <a [routerLink]="[]" [queryParams]="{ year: selectedYear() }">Quitar filtro ✕</a>
+      </p>
+    }
+    @if (contracts.hasValue()) {
+      <app-contract-table [page]="contracts.value()" (pageChange)="page.set($event)" />
+    } @else if (contracts.error()) {
+      <p class="state">No se pudieron cargar los contratos.</p>
+    } @else {
+      <p class="state">Cargando contratos…</p>
+    }
+  </section>
+}

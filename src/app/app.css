@@ -7,9 +7,13 @@
   align-items: center;
   gap: 12px 28px;
   padding: 14px max(16px, calc((100vw - 1240px) / 2));
-  background: color-mix(in srgb, var(--page) 86%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
+  background: var(--page);
+}
+
+/* Instead of a hard edge, the page fades and blurs as it slides under the bar. */
+.fade {
+  position: absolute;
+  inset: 100% 0 auto 0;
 }
 
 .brand {
@@ -68,6 +72,11 @@
   border-top: 1px solid var(--line);
 }
 
+.credit {
+  display: block;
+  margin-top: 8px;
+}
+
 .results a {
   display: block;
   padding: 10px 14px;
@@ -105,7 +114,7 @@
 
 main {
   width: min(1240px, 100% - 32px);
-  margin: 32px auto 56px;
+  margin: 40px auto 56px;
 }
 
 footer {
@@ -116,4 +125,9 @@ footer {
   font-size: 0.72rem;
   color: var(--muted);
   border-top: 1px solid var(--line);
+}
+
+.credit {
+  display: block;
+  margin-top: 8px;
 }

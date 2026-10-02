@@ -47,7 +47,8 @@ const fakeDatosGovCo = (async (input: string | URL | Request) => {
 
   const answer =
     select.startsWith("date_extract_y") ? grouped((row) => row.signed.slice(0, 4))
-        .map(({ name, rows }) => ({ anio: name, ...totals(rows) })).sort((a, b) => Number(a.anio) - Number(b.anio))
+        .map(({ name, rows }) => ({ anio: name, ...totals(rows), mayor: String(Math.max(...rows.map((row) => row.value))) }))
+        .sort((a, b) => Number(a.anio) - Number(b.anio))
     : select.includes("count(distinct") ? [{ ...totals(found), mayor: String(Math.max(0, ...found.map((row) => row.value))),
         proveedores: String(new Set(found.map((row) => row.supplier)).size) }]
     : select.includes("max(proveedor_adjudicado)") ? grouped((row) => row.supplier)
