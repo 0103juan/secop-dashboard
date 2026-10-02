@@ -16,6 +16,7 @@ export const DOMINANT_SHARE = 0.5;
 export class EntityPage {
   readonly nit = input.required<string>(); // route parameter
   readonly year = input<string>(); // ?year= query parameter
+  readonly modality = input<string>(); // ?modality= query parameter: only that modality's contracts
 
   protected readonly months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
   private readonly base = computed(() => `${API_URL}/entities/${encodeURIComponent(this.nit())}`);
@@ -29,9 +30,9 @@ export class EntityPage {
     return this.entity.hasValue() ? this.entity.value().years.at(-1)?.year : undefined;
   });
 
-  /** Goes back to the first page whenever the entity or the year changes. */
+  /** Goes back to the first page whenever the entity, the year or the modality changes. */
   protected readonly page = linkedSignal({
-    source: () => `${this.nit()}/${this.selectedYear()}`,
+    source: () => `${this.nit()}/${this.selectedYear()}/${this.modality()}`,
     computation: () => 1,
   });
 
@@ -42,7 +43,10 @@ export class EntityPage {
 
   protected readonly contracts = httpResource<ContractPage>(() => {
     const year = this.selectedYear();
-    return year ? { url: `${this.base()}/contracts`, params: { year, page: this.page() } } : undefined;
+    const modality = this.modality();
+    return year
+      ? { url: `${this.base()}/contracts`, params: { year, page: this.page(), ...(modality ? { modality } : {}) } }
+      : undefined;
   });
 
   protected readonly busiestYear = computed(() =>

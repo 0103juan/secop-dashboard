@@ -29,11 +29,12 @@ describe('formatCop', () => {
 });
 
 describe('EntityPage', () => {
-  async function render(year: string | undefined, yearOverview: Overview) {
+  async function render(year: string | undefined, yearOverview: Overview, modality?: string) {
     TestBed.configureTestingModule({ providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()] });
     const fixture = TestBed.createComponent(EntityPage);
     fixture.componentRef.setInput('nit', '890905211');
     fixture.componentRef.setInput('year', year);
+    fixture.componentRef.setInput('modality', modality);
     const http = TestBed.inject(HttpTestingController);
     const base = `${API_URL}/entities/890905211`;
 
@@ -46,7 +47,13 @@ describe('EntityPage', () => {
     http.expectOne(base).flush(entity);
     await settle();
     http.expectOne(`${base}/overview?year=${yearOverview.year}`).flush(yearOverview);
-    http.expectOne(`${base}/contracts?year=${yearOverview.year}&page=1`).flush({ page: 1, hasMore: false, items: [] });
+    http
+      .expectOne((request) =>
+        request.url === `${base}/contracts` &&
+        request.params.get('year') === String(yearOverview.year) &&
+        request.params.get('page') === '1' &&
+        request.params.get('modality') === (modality ?? null))
+      .flush({ page: 1, modality: modality ?? null, hasMore: false, items: [] });
     await fixture.whenStable();
     http.verify();
     return fixture.nativeElement as HTMLElement;
@@ -64,5 +71,11 @@ describe('EntityPage', () => {
     const warning = page.querySelector('.warning')?.textContent ?? '';
     expect(warning).toContain('Un solo contrato explica el 100 % del total de 2023');
     expect(warning).toContain('$5 mil millones'); // what the total would be without it
+  });
+
+  it('asks only for the contracts of the modality in the URL, and says so', async () => {
+    const page = await render('2024', overview, 'Contratación directa');
+    expect(page.querySelector('.label a.selected')?.textContent).toBe('Contratación directa');
+    expect(page.querySelector('.filter')?.textContent).toContain('Solo Contratación directa');
   });
 });

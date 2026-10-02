@@ -30,4 +30,4 @@ export type Contract = {
   type: string;
   url: string | null;
 };
-export type ContractPage = { page: number; hasMore: boolean; items: Contract[] };
+export type ContractPage = { page: number; modality: string | null; hasMore: boolean; items: Contract[] };

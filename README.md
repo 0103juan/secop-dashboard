@@ -12,6 +12,7 @@ Angular 22 on top of [secop-api](../secop-api). The interface is in Spanish; thi
 - **Four indicators**: total contracted, contracts, distinct suppliers, largest contract.
 - **Top suppliers and modalities** as ranked bars, and the value signed per month.
 - **The contracts**, largest first, paginated, each linking back to SECOP.
+- **A modality is a filter.** Clicking "Licitación pública" narrows the table to those contracts. The filter lives in the URL, so the filtered view is a link, and changing year drops it, because the next year may not have that modality.
 - **A warning when the total cannot be trusted.** Contract values are typed by hand at the source. When one contract explains half or more of a year's total, the page says so and shows what the total would be without it. With real data: Medellín's 2019 total is 100% one contract recorded at about 7.7 × 10²⁰ pesos.
 
 Amounts are written the way Colombians say them (`$4,3 billones`, where a *billón* is 10¹²).
@@ -30,19 +31,26 @@ Amounts are written the way Colombians say them (`$4,3 billones`, where a *bill�
 # first, in ../secop-api:  npm install && npm start
 npm install
 npm start            # http://localhost:4200
-npm test             # 3 tests (Vitest, no browser needed)
+npm test             # 4 unit tests (Vitest, no browser needed)
+npm run e2e          # 5 end-to-end tests (Playwright); first run: npx playwright install chromium
 npm run build
 ```
+
+## End-to-end tests
+
+`npm run e2e` drives a real browser against this dashboard and the **real secop-api**, taken from the repository next to this one (or `SECOP_API_DIR`). The only fake is the government portal: `e2e/api.mts` starts the API with a `fetch` that answers each query from five contracts. So the tests cross the same code that is deployed on both sides: routing, validation, CORS and the modality lookup in the API, and the search, the URL state and the rendering here.
+
+They cover the journey (search without accents, open the latest year, filter by modality, remove the filter), the shareable filtered link, the warning for a year that one mistyped contract explains, a made-up modality (`x' OR '1'='1`) being refused by the API with a 400 instead of answered with every contract, and contract links pointing only to SECOP.
 
 On `localhost` the dashboard calls a local API; anywhere else it calls `DEPLOYED_API`, a constant in `src/app/api.ts`.
 
 ## Continuous deployment
 
-`.github/workflows/deploy.yml` runs the tests, builds, and publishes to GitHub Pages on every push to `main`. A failing test stops the deployment.
+`.github/workflows/deploy.yml` runs the unit tests, checks out secop-api and runs the end-to-end tests, then builds and publishes to GitHub Pages on every push to `main`. A failing test of either kind stops the deployment.
 
 ## Limits
 
 - It is a client of `secop-api` and shows nothing without it.
 - Only SECOP II: totals are a floor, not all of an entity's contracting.
-- Tests cover the amount formatting and the entity page's two key behaviours (default year, dominant-contract warning); there are no end-to-end browser tests.
-- No table sorting or filtering beyond year and page.
+- The end-to-end tests run on Chromium only and against a fake portal with five contracts; they say nothing about how the real portal behaves or how fast it is.
+- No table sorting, and no filtering beyond year, modality and page.

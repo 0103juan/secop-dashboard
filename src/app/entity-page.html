@@ -69,7 +69,14 @@
           @for (m of o.byModality; track m.modality) {
             <li>
               <div class="label">
-                <span>{{ m.modality }}</span>
+                <!-- Year links replace the query, so changing year drops a modality that year may not have. -->
+                <a
+                  [routerLink]="[]"
+                  [queryParams]="{ year: o.year, modality: m.modality === modality() ? null : m.modality }"
+                  [class.selected]="m.modality === modality()"
+                  [attr.aria-current]="m.modality === modality() ? 'true' : null"
+                  title="Ver solo los contratos de esta modalidad"
+                >{{ m.modality }}</a>
                 <strong>{{ m.total | cop }}</strong>
               </div>
               <div class="track"><div [style.width.%]="(100 * m.total) / o.byModality[0].total"></div></div>
@@ -101,6 +108,12 @@
 @if (selectedYear()) {
   <section class="card contracts">
     <h2>Contratos de {{ selectedYear() }}, del más grande al más pequeño</h2>
+    @if (modality()) {
+      <p class="filter">
+        Solo <strong>{{ modality() }}</strong>
+        <a [routerLink]="[]" [queryParams]="{ year: selectedYear() }">Quitar filtro ✕</a>
+      </p>
+    }
     @if (contracts.hasValue()) {
       @let c = contracts.value();
       <div class="scroll">
