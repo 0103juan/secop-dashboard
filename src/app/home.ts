@@ -18,14 +18,18 @@ import { RouterLink } from '@angular/router';
     </p>
   `,
   styles: `
-    :host { display: block; max-width: 640px; padding-top: 8vh; }
-    h1 { margin: 0 0 12px; font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1.1; letter-spacing: -0.02em; }
-    p { color: var(--muted); font-size: 1.05rem; }
-    .examples { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 0.95rem; }
-    .examples a {
-      padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px;
-      background: var(--surface); text-decoration: none;
+    :host { display: block; padding-top: 6vh; }
+    h1 {
+      margin: 0 0 24px; max-width: 14ch; font-size: clamp(3rem, 11vw, 9rem); font-weight: 800; font-stretch: 75%;
+      line-height: 0.86; letter-spacing: -0.03em; text-transform: uppercase;
     }
+    p { max-width: 60ch; color: var(--muted); font-size: 1.15rem; }
+    .examples {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 32px;
+      font-family: var(--mono); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .examples a { padding: 9px 14px; border: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+    .examples a:hover { color: var(--page); background: var(--accent); border-color: var(--accent); }
   `,
 })
 export class Home {

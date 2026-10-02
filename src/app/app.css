@@ -5,16 +5,20 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 24px;
-  padding: 12px max(16px, calc((100vw - 1120px) / 2));
-  background: var(--surface);
+  gap: 12px 28px;
+  padding: 14px max(16px, calc((100vw - 1240px) / 2));
+  background: color-mix(in srgb, var(--page) 86%, transparent);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
 
 .brand {
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-stretch: 75%;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
   color: var(--ink);
   text-decoration: none;
 }
@@ -30,69 +34,86 @@
 
 .search input {
   width: 100%;
-  padding: 10px 14px;
-  font: inherit;
+  padding: 11px 14px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
   color: var(--ink);
-  background: var(--page);
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 0;
+}
+
+.search input::placeholder {
+  color: var(--muted);
 }
 
 .search input:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: none;
+  border-color: var(--accent);
 }
 
 .results {
   position: absolute;
-  inset: calc(100% + 6px) 0 auto 0;
+  inset: calc(100% + 4px) 0 auto 0;
   margin: 0;
-  padding: 6px;
+  padding: 0;
   list-style: none;
   max-height: 60vh;
   overflow-y: auto;
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  box-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
+  border: 1px solid var(--accent);
+}
+
+.results li + li {
+  border-top: 1px solid var(--line);
 }
 
 .results a {
   display: block;
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 10px 14px;
   color: var(--ink);
   text-decoration: none;
 }
 
 .results a:hover,
 .results a:focus-visible {
-  background: var(--accent-soft);
+  color: var(--page);
+  background: var(--accent);
+  outline: none;
+}
+
+.results a:hover span,
+.results a:focus-visible span {
+  color: var(--page);
 }
 
 .results strong {
   display: block;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
 }
 
 .results span,
 .hint {
-  font-size: 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
   color: var(--muted);
 }
 
 .hint {
-  padding: 8px 10px;
+  padding: 10px 14px;
 }
 
 main {
-  width: min(1120px, 100% - 32px);
-  margin: 24px auto 48px;
+  width: min(1240px, 100% - 32px);
+  margin: 32px auto 56px;
 }
 
 footer {
-  width: min(1120px, 100% - 32px);
+  width: min(1240px, 100% - 32px);
   margin: 0 auto 32px;
-  font-size: 0.8rem;
+  padding-top: 16px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
   color: var(--muted);
+  border-top: 1px solid var(--line);
 }

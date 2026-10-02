@@ -2,42 +2,60 @@
   display: grid;
   /* minmax(0, ...) lets the wide table scroll inside its card instead of widening the page. */
   grid-template-columns: minmax(0, 1fr);
-  gap: 20px;
+  gap: 24px;
 }
 
 h1 {
   margin: 0;
-  font-size: clamp(1.3rem, 3.4vw, 1.9rem);
-  line-height: 1.15;
-  letter-spacing: -0.015em;
+  font-size: clamp(2rem, 6vw, 4.2rem);
+  font-weight: 800;
+  font-stretch: 75%;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
-h2 {
-  margin: 0 0 14px;
-  font-size: 0.82rem;
-  font-weight: 600;
+/* Small technical labels: section titles, table headers, captions. */
+h2,
+th,
+.kpis span,
+small,
+.entity p,
+.pager {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   color: var(--muted);
 }
 
-.entity p,
+h2 {
+  margin: 0 0 18px;
+  color: var(--accent);
+}
+
+.entity p {
+  margin: 12px 0 0;
+}
+
 .state {
-  margin: 6px 0 0;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.85rem;
   color: var(--muted);
 }
 
 .card {
-  padding: 18px 20px;
+  padding: 20px 22px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
 }
 
 /* Year selector: each year is a bar as tall as its number of contracts. */
 .years {
   display: flex;
-  gap: 6px;
+  gap: 3px;
   overflow-x: auto;
   padding-bottom: 4px;
 }
@@ -50,9 +68,10 @@ h2 {
   flex-direction: column;
   justify-content: flex-end;
   align-items: stretch;
-  height: 92px;
+  height: 110px;
   text-align: center;
-  font-size: clamp(0.66rem, 2.6vw, 0.78rem);
+  font-family: var(--mono);
+  font-size: clamp(0.62rem, 2.4vw, 0.74rem);
   color: var(--muted);
   text-decoration: none;
 }
@@ -60,9 +79,8 @@ h2 {
 .bar {
   display: block;
   min-height: 3px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   background: var(--line);
-  border-radius: 5px 5px 2px 2px;
 }
 
 .years a:hover .bar {
@@ -71,7 +89,7 @@ h2 {
 
 .years a.selected {
   font-weight: 700;
-  color: var(--ink);
+  color: var(--accent);
 }
 
 .years a.selected .bar,
@@ -80,53 +98,66 @@ h2 {
 }
 
 .warning {
-  padding: 12px 16px;
-  font-size: 0.92rem;
+  padding: 14px 18px;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--warn) 14%, var(--page));
+  border: 1px solid var(--warn);
+  border-left-width: 6px;
+}
+
+.warning strong {
   color: var(--warn);
-  background: var(--warn-soft);
-  border-radius: 12px;
 }
 
 .kpis {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
 }
 
 .kpis div {
-  padding: 16px 18px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 14px;
+  padding: 18px 20px;
+  background: var(--page);
 }
 
 .kpis span {
   display: block;
-  font-size: 0.8rem;
-  color: var(--muted);
 }
 
 .kpis strong {
-  font-size: 1.45rem;
-  letter-spacing: -0.015em;
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  font-weight: 800;
+  font-stretch: 75%;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.kpis div:first-child strong {
+  color: var(--accent);
 }
 
 .columns {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
-  gap: 20px;
+  gap: 24px;
   align-items: start;
 }
 
 .stack {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 20px;
+  gap: 24px;
 }
 
 .ranking {
   display: grid;
-  gap: 12px;
+  gap: 14px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -136,41 +167,40 @@ h2 {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
 }
 
 .label strong {
+  font-family: var(--mono);
+  font-size: 0.8rem;
   white-space: nowrap;
 }
 
 .track {
-  height: 6px;
-  margin: 5px 0 3px;
-  background: var(--page);
-  border-radius: 3px;
+  height: 5px;
+  margin: 6px 0 4px;
+  background: var(--line);
 }
 
 .track div {
   height: 100%;
   min-width: 3px;
   background: var(--accent);
-  border-radius: 3px;
 }
 
 small {
   display: block;
-  font-size: 0.76rem;
-  color: var(--muted);
+  font-size: 0.64rem;
 }
 
 .months {
   display: flex;
-  gap: 6px;
+  gap: 3px;
 }
 
 .months > div {
   min-width: 0;
-  height: 120px;
+  height: 130px;
 }
 
 .scroll {
@@ -181,35 +211,48 @@ table {
   width: 100%;
   min-width: 760px;
   border-collapse: collapse;
-  font-size: 0.86rem;
+  font-size: 0.88rem;
 }
 
 th {
-  padding: 0 10px 8px;
+  padding: 0 10px 10px;
   text-align: left;
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: var(--muted);
   border-bottom: 1px solid var(--line);
 }
 
 td {
-  padding: 10px;
+  padding: 12px 10px;
   vertical-align: top;
   border-bottom: 1px solid var(--line);
 }
 
+tbody tr:hover {
+  background: var(--page);
+}
+
+td a {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
 .money {
   text-align: right;
-  font-variant-numeric: tabular-nums;
 }
 
 td.money {
-  font-weight: 600;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 .nowrap {
   white-space: nowrap;
+}
+
+td.nowrap:first-child {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
 }
 
 .object {
@@ -232,22 +275,29 @@ td.money {
   justify-content: center;
   align-items: center;
   gap: 16px;
-  margin-top: 14px;
-  font-size: 0.86rem;
-  color: var(--muted);
+  margin-top: 16px;
 }
 
 button {
-  padding: 7px 14px;
-  font: inherit;
+  padding: 8px 14px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   color: var(--ink);
-  background: var(--surface);
+  background: transparent;
   border: 1px solid var(--line);
-  border-radius: 9px;
+  border-radius: 0;
   cursor: pointer;
 }
 
+button:hover:not(:disabled) {
+  color: var(--page);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
 button:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: default;
 }

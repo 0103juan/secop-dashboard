@@ -22,7 +22,7 @@ Amounts are written the way Colombians say them (`$4,3 billones`, where a *bill√
 - **`httpResource`** for data: each request is derived from the route's signals, so changing the year in the URL refetches the right things and nothing else.
 - The route is the state: `#/entidad/890905211?year=2024` is a shareable link, bound to the component with `withComponentInputBinding()`. Hash URLs keep deep links working on static hosting.
 - `linkedSignal` resets the contract page to 1 whenever the entity or the year changes.
-- No UI or chart library: the bars are CSS. Light and dark themes follow the system.
+- No UI or chart library: the bars are CSS. One dark theme, shared with the portfolio site and the mobile app: near-black, one accent, condensed headlines, no rounded corners. The two fonts are self-hosted.
 
 ## Run it
 
