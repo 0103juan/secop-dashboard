@@ -86,3 +86,7 @@ On `localhost` the dashboard calls a local API; anywhere else it calls the deplo
 - The readings are arithmetic on one year of one entity. They do not compare entities with each other, adjust for inflation or know why a figure moved.
 - Supplier concentration is measured on the ten largest suppliers the API returns, not on all of them.
 - The award method comes from the modality's name. A contract registered under the wrong modality is counted where the register put it.
+
+## License
+
+[MIT](LICENSE). The components in `src/app/ui/` are Angular ports of Skiper UI designs and keep their credit to Skiper UI.
